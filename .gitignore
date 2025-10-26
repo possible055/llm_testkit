@@ -1,0 +1,28 @@
+# Python Basic
+__pycache__/
+*.pyc
+
+# Build / Distribution
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Linter / formatter cache
+.pylint.d/
+ruff_cache/
+
+# IDE editor settings
+.github/
+.cursor/
+.kilocode/
+.kiro/
+.vscode/
+
+# Logs / Env
+*.log
+.env
+
+# Generated outputs
+output/
+tests/

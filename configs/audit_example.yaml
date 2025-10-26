@@ -1,0 +1,104 @@
+# LLM API 黑盒審計配置範例
+# 此配置檔用於設定審計測試的各項參數
+
+# API 端點配置
+endpoint:
+  # API 服務的完整 URL（需符合 OpenAI Chat Completions 格式）
+  url: "https://api.example.com/v1/chat/completions"
+  
+  # 要測試的模型名稱（API 請求中使用的 model 參數）
+  model: "meta-llama/Llama-3.1-8B"
+  
+  # API 金鑰（若為 null 則從環境變數 OPENAI_API_KEY 讀取）
+  api_key: null
+  
+  # API 是否支援 logprobs 參數（Phase 2 功能，目前保留）
+  supports_logprobs: false
+
+# 分詞器配置
+tokenizer:
+  # Hugging Face 模型名稱或本地路徑
+  # 用於載入官方分詞器以計算 token 數量
+  # 範例：
+  #   - "gpt2" (公開可用，適合測試)
+  #   - "meta-llama/Llama-3.1-8B" (需要授權)
+  #   - "Qwen/Qwen2.5-7B"
+  #   - "THUDM/glm-4-9b"
+  #   - "/path/to/local/model"
+  model_name_or_path: "gpt2"
+
+# 控制端點配置（Phase 2 功能，可選）
+# 用於零溫度重播檢測，需要一個可信任的基準 API
+# Phase 1 可以完全省略此區塊
+# control_endpoint: null
+
+# 解碼參數配置
+decoding:
+  # 溫度參數（0.0 = 確定性輸出，適合測試穩定性）
+  temperature: 0.0
+  
+  # Top-p 採樣參數（1.0 = 不進行 nucleus sampling）
+  top_p: 1.0
+  
+  # 最大生成 token 數
+  max_tokens: 128
+  
+  # 隨機種子（確保可重複性）
+  seed: 1234
+
+# 測試套件定義
+# 每個套件包含要執行的檢測器列表
+suites:
+  # 快速測試套件（Phase 1 核心檢測器）
+  quick:
+    - tokenizer_fingerprint  # 分詞器指紋檢測
+    - perturbation           # 微擾穩定性檢測
+    - arithmetic_json        # 算術與 JSON 結構完整性檢測
+    - style_bias             # 風格偏移檢測
+  
+  # 完整測試套件（Phase 2 擴展）
+  full:
+    - tokenizer_fingerprint
+    - perturbation
+    - arithmetic_json
+    - style_bias
+    # Phase 2 檢測器（尚未實作）：
+    # - zero_replay          # 零溫度重播檢測
+    # - near_tie             # Near-tie 探針檢測
+    # - tail_vocab           # 尾部詞彙檢測
+    # - long_context         # 長上下文記憶檢測
+
+# 檢測閾值配置
+# 各檢測器的通過/失敗判定標準
+thresholds:
+  # 分詞器指紋：平均 token 數偏差百分比上限
+  fingerprint_avg_diff_pct: 2.0
+  
+  # 微擾穩定性：Top-1 token 變更率上限（百分比）
+  perturb_top1_change_pct: 20.0
+  
+  # 算術測試：正確率下限
+  arithmetic_acc: 0.9
+  
+  # JSON 測試：合法率下限
+  json_valid_rate: 0.9
+  
+  # 風格偏移：固定前綴出現率上限
+  style_fixed_prefix_rate: 0.2
+  
+  # 風格偏移：格式違規率上限
+  style_format_violation_rate: 0.1
+
+# 執行配置
+run:
+  # 並發數（Phase 1 設為 1，順序執行）
+  parallel: 1
+  
+  # API 請求間的延遲時間（秒），用於避免速率限制
+  rate_limit_sleep: 0.2
+  
+  # API 請求失敗時的重試次數
+  retries: 2
+  
+  # 單次 API 請求的超時時間（秒）
+  timeout_sec: 60

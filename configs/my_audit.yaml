@@ -1,0 +1,53 @@
+# 我的審計配置
+# 請修改以下設定以符合你的 API 端點
+
+endpoint:
+  # 修改為你的 API 端點 URL
+  url: "https://api.openai.com/v1/chat/completions"
+  
+  # 修改為你要測試的模型名稱
+  model: "gpt-3.5-turbo"
+  
+  # 設為 null 從環境變數 OPENAI_API_KEY 讀取
+  # 或直接填寫金鑰（不建議提交到版本控制）
+  api_key: null
+  
+  supports_logprobs: false
+
+tokenizer:
+  # 修改為對應的分詞器模型
+  # 注意：應與 endpoint.model 的模型家族對應
+  # 範例：
+  #   - GPT 系列: "gpt2"
+  #   - Llama 系列: "meta-llama/Llama-3.1-8B"
+  #   - Qwen 系列: "Qwen/Qwen2.5-7B"
+  model_name_or_path: "gpt2"
+
+control_endpoint: null
+
+decoding:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 128
+  seed: 1234
+
+suites:
+  quick:
+    - tokenizer_fingerprint
+    - perturbation
+    - arithmetic_json
+    - style_bias
+
+thresholds:
+  fingerprint_avg_diff_pct: 2.0
+  perturb_top1_change_pct: 20.0
+  arithmetic_acc: 0.9
+  json_valid_rate: 0.9
+  style_fixed_prefix_rate: 0.2
+  style_format_violation_rate: 0.1
+
+run:
+  parallel: 1
+  rate_limit_sleep: 0.2
+  retries: 2
+  timeout_sec: 60

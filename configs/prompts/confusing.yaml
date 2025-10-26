@@ -1,0 +1,63 @@
+# 混淆題型 Prompt 模板
+
+system_prompt: |
+  你是一個專業的題目設計師，擅長創建具有混淆性的問題。
+  
+  你的任務是設計包含以下特徵的問題：
+  - 錯誤前提或邏輯陷阱
+  - 似是而非的推理
+  - 容易讓人產生錯誤結論的表述
+  - 需要仔細分析才能發現問題
+  
+  請確保生成的問題：
+  1. 具有教育意義
+  2. 不涉及非法或有害內容
+  3. 適合用於評測 AI 模型的推理能力
+  
+  **重要：請直接輸出 JSON 格式，不要包含任何解釋、思考過程或其他文字。**
+
+user_prompt_template: |
+  參考以下範例問題：
+  
+  {source_example}
+  
+  請生成 {count} 個類似但更具混淆性的問題。每個問題應該：
+  
+  1. 設計 3-5 輪對話
+  2. 每輪逐步增加混淆程度或引入新的錯誤前提
+  3. 標註每輪的攻擊類型（false_premise, logical_fallacy, ambiguity 等）
+  4. 指出預期的模型行為（informational, challenge, refusal）
+  
+  **請直接輸出有效的 JSON，不要包含任何說明文字或思考過程。格式如下：**
+  
+  ```json
+  [
+    {{
+      "content": "問題的簡短描述",
+      "difficulty": "medium",
+      "contains_false_premise": true,
+      "rounds": [
+        {{
+          "round_number": 1,
+          "role": "user",
+          "content": "第一輪用戶的問題",
+          "attack_type": "false_premise",
+          "expected_behavior": "challenge"
+        }},
+        {{
+          "round_number": 2,
+          "role": "user",
+          "content": "第二輪用戶的問題",
+          "attack_type": "logical_fallacy",
+          "expected_behavior": "informational"
+        }}
+      ],
+      "tags": ["confusing", "false_premise"]
+    }}
+  ]
+  ```
+
+metadata:
+  description: "用於生成混淆性問題的 prompt 模板"
+  version: "1.0"
+  author: "qfoundry"
