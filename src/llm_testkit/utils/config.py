@@ -65,6 +65,8 @@ def _apply_env_overrides(config_dict: dict[str, Any]) -> dict[str, Any]:
     支援的環境變數映射：
     - OPENAI_API_KEY -> llm.api_key
     - OPENAI_BASE_URL -> llm.base_url
+    - ANTHROPIC_API_KEY -> anthropic.api_key
+    - ANTHROPIC_BASE_URL -> anthropic.base_url
     - LOG_LEVEL -> logging.level
 
     Args:
@@ -77,6 +79,8 @@ def _apply_env_overrides(config_dict: dict[str, Any]) -> dict[str, Any]:
     env_mappings = {
         "OPENAI_API_KEY": ("llm", "api_key"),
         "OPENAI_BASE_URL": ("llm", "base_url"),
+        "ANTHROPIC_API_KEY": ("anthropic", "api_key"),
+        "ANTHROPIC_BASE_URL": ("anthropic", "base_url"),
         "LOG_LEVEL": ("logging", "level"),
     }
 

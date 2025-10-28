@@ -23,14 +23,18 @@ def __getattr__(name: str):
     """延遲導入以避免循環依賴。"""
     if name == "AuditConfig":
         from llm_testkit.audit.config import AuditConfig
+
         return AuditConfig
     elif name == "BaseDetector":
         from llm_testkit.audit.detectors import BaseDetector
+
         return BaseDetector
     elif name == "DetectorResult":
         from llm_testkit.audit.detectors import DetectorResult
+
         return DetectorResult
     elif name == "AuditRunner":
         from llm_testkit.audit.runner import AuditRunner
+
         return AuditRunner
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

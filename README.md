@@ -49,6 +49,7 @@ pip install -e .
 核心依賴會自動安裝：
 
 - `openai>=2.6.0` - OpenAI API 客戶端（支援相容 API）
+- `anthropic>=0.40.0` - Anthropic API 客戶端（支援 Claude 模型）
 - `tenacity>=9.1.2` - 重試邏輯與指數回退
 - `pyyaml>=6.0` - YAML 配置解析
 - `python-dotenv>=1.1.1` - 環境變數管理
@@ -102,6 +103,8 @@ $env:LOG_LEVEL="INFO"  # 可選
 |------|--------|------|
 | `OPENAI_API_KEY` | 必要 | OpenAI API 金鑰，當配置檔中 `api_key: null` 時使用 |
 | `OPENAI_BASE_URL` | 可選 | 自訂 API 端點，用於第三方相容 API |
+| `ANTHROPIC_API_KEY` | 可選 | Anthropic API 金鑰，用於 Claude 模型 |
+| `ANTHROPIC_BASE_URL` | 可選 | 自訂 Anthropic API 端點 |
 | `LOG_LEVEL` | 可選 | 日誌等級 (DEBUG/INFO/WARNING/ERROR/CRITICAL) |
 | `HF_ENDPOINT` | 可選 | Hugging Face 鏡像站，用於加速分詞器下載 |
 
@@ -253,6 +256,58 @@ pip install huggingface_hub
 huggingface-cli download meta-llama/Llama-3.1-8B
 ```
 
+## API 客戶端支援
+
+LLM TestKit 提供兩種 API 客戶端實作，可用於與不同的 LLM 服務互動：
+
+### OpenAI 相容 API
+
+支援 OpenAI 官方 API 及所有相容的第三方服務（如 Azure OpenAI、本地部署等）。
+
+```python
+from llm_testkit.backend import OpenAICompatibleAPI
+
+async with OpenAICompatibleAPI(
+    model_name="gpt-4",
+    api_key="your-api-key",
+    base_url="https://api.openai.com/v1"  # 可選
+) as client:
+    response = await client.generate(
+        messages=[{"role": "user", "content": "Hello!"}],
+        max_tokens=100,
+        temperature=0.7
+    )
+    print(response.choices[0].message.content)
+```
+
+### Anthropic API
+
+支援 Anthropic Claude 模型系列，包含針對長時間推理請求的最佳化。
+
+```python
+from llm_testkit.backend import AnthropicAPI
+
+async with AnthropicAPI(
+    model_name="claude-sonnet-4-20250514",
+    api_key="your-anthropic-api-key",
+    base_url="https://api.anthropic.com"  # 可選
+) as client:
+    response = await client.generate(
+        messages=[{"role": "user", "content": "Hello!"}],
+        system="You are a helpful assistant.",  # 可選
+        max_tokens=2048,
+        temperature=0.5
+    )
+    print(response.content[0].text)
+```
+
+**特性：**
+- 自動重試機制（速率限制、連線錯誤、超時）
+- 指數退避策略（最多 3 次重試）
+- Socket keepalive 支援長時間推理請求
+- 完整的錯誤處理與類型提示
+- Async context manager 自動資源管理
+
 ## 程式化使用
 
 除了 CLI，也可以在 Python 程式碼中直接使用審計模組：
@@ -303,7 +358,8 @@ llm_testkit/
 │   │   ├── runner.py         # 審計執行器
 │   │   └── config.py         # 配置模型
 │   ├── backend/              # API 客戶端實作
-│   │   └── openai_api.py     # OpenAI 相容 API 包裝器
+│   │   ├── openai_api.py     # OpenAI 相容 API 包裝器
+│   │   └── anthropic_api.py  # Anthropic API 包裝器
 │   ├── core/                 # 核心工具
 │   │   ├── tokenizer.py      # 分詞器抽象
 │   │   └── metrics.py        # 指標計算工具

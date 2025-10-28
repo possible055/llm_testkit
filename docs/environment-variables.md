@@ -24,6 +24,22 @@
   - 第三方代理: `https://api.example.com/v1`
 - **說明**: 用於連接 OpenAI 相容的第三方 API
 
+#### `ANTHROPIC_API_KEY`
+- **必要性**: 可選（使用 Anthropic API 時必要）
+- **用途**: Anthropic API 金鑰
+- **範例**: `sk-ant-xxxxxxxxxxxxx`
+- **說明**: 
+  - 用於呼叫 Anthropic Claude 模型 API
+  - 當配置檔中 `anthropic.api_key` 設為 `null` 時，會自動從此環境變數讀取
+  - 建議透過環境變數設定，避免將金鑰寫入配置檔
+
+#### `ANTHROPIC_BASE_URL`
+- **必要性**: 可選
+- **用途**: 自訂 Anthropic API 端點
+- **預設值**: `https://api.anthropic.com`
+- **範例**: `https://api.anthropic.com`
+- **說明**: 用於連接自訂的 Anthropic API 端點或代理
+
 ### 日誌配置
 
 #### `LOG_LEVEL`
@@ -62,6 +78,8 @@
    ```env
    OPENAI_API_KEY=sk-your-actual-api-key-here
    OPENAI_BASE_URL=https://api.example.com/v1
+   ANTHROPIC_API_KEY=sk-ant-your-anthropic-key-here
+   ANTHROPIC_BASE_URL=https://api.anthropic.com
    LOG_LEVEL=INFO
    ```
 
@@ -78,6 +96,8 @@
 ```bash
 export OPENAI_API_KEY="your-api-key-here"
 export OPENAI_BASE_URL="https://api.example.com/v1"
+export ANTHROPIC_API_KEY="your-anthropic-key-here"
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"
 export LOG_LEVEL=INFO
 ```
 
@@ -85,6 +105,8 @@ export LOG_LEVEL=INFO
 ```powershell
 $env:OPENAI_API_KEY="your-api-key-here"
 $env:OPENAI_BASE_URL="https://api.example.com/v1"
+$env:ANTHROPIC_API_KEY="your-anthropic-key-here"
+$env:ANTHROPIC_BASE_URL="https://api.anthropic.com"
 $env:LOG_LEVEL="INFO"
 ```
 
@@ -92,6 +114,8 @@ $env:LOG_LEVEL="INFO"
 ```cmd
 set OPENAI_API_KEY=your-api-key-here
 set OPENAI_BASE_URL=https://api.example.com/v1
+set ANTHROPIC_API_KEY=your-anthropic-key-here
+set ANTHROPIC_BASE_URL=https://api.anthropic.com
 set LOG_LEVEL=INFO
 ```
 

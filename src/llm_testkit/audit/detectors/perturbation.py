@@ -126,7 +126,7 @@ class PerturbationDetector(BaseDetector):
 
         # 判定通過條件：Top-1 變更率在閾值內
         passed = top1_change_pct <= thresholds.perturb_top1_change_pct
-        
+
         notes = ""
         if failed_samples > 0:
             notes = f"警告：{failed_samples} 個樣本請求失敗"
@@ -143,9 +143,9 @@ class PerturbationDetector(BaseDetector):
                 "pairs": total_pairs,
                 "failed_samples": failed_samples,
                 "success_rate": round(success_rate, 2),
-                "threshold": thresholds.perturb_top1_change_pct
+                "threshold": thresholds.perturb_top1_change_pct,
             },
-            notes=notes
+            notes=notes,
         )
 
     async def _call_api(

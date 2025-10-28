@@ -32,14 +32,14 @@ class Tokenizer:
         try:
             self._tokenizer = AutoTokenizer.from_pretrained(
                 model_name_or_path,
-                trust_remote_code=True  # 支援自訂分詞器（如 Qwen）
+                trust_remote_code=True,  # 支援自訂分詞器（如 Qwen）
             )
         except Exception as e:
             raise RuntimeError(
                 f"無法載入分詞器 {model_name_or_path}: {e}\n"
                 f"請確認模型名稱正確或已下載到本地。\n"
                 f"可使用以下命令預先下載：\n"
-                f"  python -c \"from transformers import AutoTokenizer; "
+                f'  python -c "from transformers import AutoTokenizer; '
                 f"AutoTokenizer.from_pretrained('{model_name_or_path}')\""
             ) from e
 

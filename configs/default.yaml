@@ -3,6 +3,8 @@
 # 環境變數支援：
 #   - OPENAI_API_KEY: 覆蓋 llm.api_key
 #   - OPENAI_BASE_URL: 覆蓋 llm.base_url
+#   - ANTHROPIC_API_KEY: 覆蓋 anthropic.api_key
+#   - ANTHROPIC_BASE_URL: 覆蓋 anthropic.base_url
 #   - LOG_LEVEL: 覆蓋 logging.level
 # 
 # 建議：在專案根目錄建立 .env 檔案來設定敏感資訊（.env 已被 gitignore 排除）
@@ -12,6 +14,12 @@ llm:
   base_url: "https://api-node-jp.04126516.xyz/proxy/z-ai-openai"
   api_key: null  # 請透過環境變數 OPENAI_API_KEY 設定，避免 key 被上傳到 GitHub
   default_model: "glm-4.6"
+
+# Anthropic API 設定
+anthropic:
+  base_url: null  # 使用預設端點，或設定自訂端點
+  api_key: null  # 請透過環境變數 ANTHROPIC_API_KEY 設定
+  default_model: "claude-sonnet-4-20250514"
 
 # 生成設定
 generation:
